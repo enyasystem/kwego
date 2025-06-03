@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* Light mode background - White */
+    --foreground: 222.2 84% 4.9%; /* Light mode text - Dark Navy/Black */
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 217 33% 20%; /* Belfx Navy for primary elements in light mode */
+    --primary-foreground: 0 0% 98%; /* White text on primary */
+
+    --secondary: 45 87% 50%; /* Belfx Gold for secondary elements */
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 45 87% 50%; /* Belfx Gold */
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --font-inter: "Inter", sans-serif;
+  }
+
+  .dark {
+    --background: 222 47% 11%; /* Dark mode background - Belfx Navy #0A192F */
+    --foreground: 0 0% 98%; /* Dark mode text - White */
+
+    --card: 222 40% 15%; /* Slightly lighter navy for cards */
+    --card-foreground: 0 0% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 45 87% 50%; /* Belfx Gold for primary elements in dark mode */
+    --primary-foreground: 222.2 47.4% 11.2%; /* Dark text on gold */
+
+    --secondary: 148 58% 45%; /* Belfx Green for secondary elements */
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 222 30% 20%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 45 87% 50%; /* Belfx Gold */
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 222 30% 25%;
+    --input: 222 30% 25%;
+    --ring: 45 87% 50%; /* Gold ring */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-inter);
+  }
+}
