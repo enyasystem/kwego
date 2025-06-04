@@ -15,7 +15,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import AdminSidebar from "@/components/layout/admin-sidebar";
 
 const AdminDashboard = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -46,6 +46,20 @@ const AdminDashboard = () => {
     setIsAuthenticated(true);
     setLoading(false);
   };
+
+  // On mount, check if admin is already logged in
+  useEffect(() => {
+    const checkSession = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+    checkSession();
+  }, []);
 
   // Fetch all users and KYC requests after login
   useEffect(() => {
@@ -131,7 +145,8 @@ const AdminDashboard = () => {
     setLoading(false);
   };
 
-  if (!isAuthenticated) {
+  // Only show login form if isAuthenticated === false
+  if (isAuthenticated === false) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-belfx_navy-DEFAULT">
         <Card className="w-full max-w-sm">
@@ -163,6 +178,11 @@ const AdminDashboard = () => {
         </Card>
       </div>
     );
+  }
+
+  // Show nothing until session is checked
+  if (isAuthenticated === null) {
+    return null;
   }
 
   return (
