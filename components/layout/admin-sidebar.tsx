@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Users, IdCard, Settings, BarChart2, MoreHorizontal, LogOut, Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -27,9 +27,21 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
     { id: 1, message: "New KYC request submitted", time: "2m ago", read: false },
     { id: 2, message: "User John Doe completed a trade", time: "10m ago", read: false },
   ]);
-  const unreadCount = notifications.filter(n => !n.read).length;
   const [showNotif, setShowNotif] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!showNotif) return;
+    function handleClick(e: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotif(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showNotif]);
 
   // Simulate real-time notification (for demo)
   useEffect(() => {
@@ -52,12 +64,37 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
           className="ml-auto relative p-2 hover:bg-belfx_gold-DEFAULT/10 rounded-full"
           onClick={() => setShowNotif((v) => !v)}
           aria-label="Notifications"
+          type="button"
         >
           <Bell className="w-6 h-6 text-belfx_gold-DEFAULT" />
           {unreadCount > 0 && (
             <UIBadge className="absolute -top-1 -right-1 bg-red-500 text-xs px-1.5 py-0.5">{unreadCount}</UIBadge>
           )}
         </button>
+        {showNotif && (
+          <div
+            ref={notifRef}
+            className="fixed md:absolute left-0 md:left-auto top-20 md:top-16 w-full md:w-80 max-w-xs md:max-w-none bg-white text-black rounded-lg shadow-xl z-50 border border-belfx_gold-DEFAULT animate-fade-in md:right-0"
+          >            <div className="p-4 border-b font-semibold text-belfx_navy-DEFAULT">Notifications</div>
+            <ul className="max-h-64 overflow-y-auto divide-y">
+              {notifications.length === 0 && (
+                <li className="p-4 text-center text-gray-400">No notifications</li>
+              )}
+              {notifications.map((n) => (
+                <li key={n.id} className={`p-4 ${n.read ? "bg-gray-50" : "bg-belfx_gold-DEFAULT/10"}`}>
+                  <div className="font-medium">{n.message}</div>
+                  <div className="text-xs text-gray-500 mt-1">{n.time}</div>
+                </li>
+              ))}
+            </ul>
+            <button
+              className="w-full py-2 text-sm text-belfx_gold-DEFAULT hover:underline border-t"
+              onClick={() => setNotifications((prev) => prev.map(n => ({ ...n, read: true })))}
+            >
+              Mark all as read
+            </button>
+          </div>
+        )}
         {/* Close button for mobile */}
         {isMobile && closeSidebar && (
           <button
@@ -104,4 +141,4 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
 
 export default AdminSidebar;
 
-// Commit message: fix(responsive): update AdminSidebar for mobile/desktop support and close button on mobile 📱
+// Commit message: fix(notifications): ensure notification dropdown opens and closes correctly on icon click and outside click 🛎️
