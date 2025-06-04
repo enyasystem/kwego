@@ -13,6 +13,15 @@ CREATE TABLE IF NOT EXISTS public.kyc_requests (
     updated_at timestamptz NOT NULL DEFAULT now()
 );
 
+-- Add missing smile_id_job_id and result columns for Smile Identity integration
+ALTER TABLE public.kyc_requests
+ADD COLUMN IF NOT EXISTS smile_id_job_id text,
+ADD COLUMN IF NOT EXISTS result jsonb;
+
+-- Add missing document_type column for KYC document type
+ALTER TABLE public.kyc_requests
+ADD COLUMN IF NOT EXISTS document_type text;
+
 -- Index for quick lookup by user
 CREATE INDEX IF NOT EXISTS idx_kyc_requests_user_id ON public.kyc_requests(user_id);
 

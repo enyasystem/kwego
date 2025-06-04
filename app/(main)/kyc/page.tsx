@@ -4,6 +4,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 // TODO: Connect to Supabase and Smile Identity API
 // TODO: Add stepper logic and form validation
@@ -24,6 +25,16 @@ const KycPage = () => {
   // Placeholder for status
   const [status, setStatus] = React.useState<"pending_submission" | "pending_review" | "approved" | "rejected">("pending_submission");
 
+  // Placeholder for user ID
+  const [userId, setUserId] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data, error }) => {
+      if (data?.user?.id) setUserId(data.user.id);
+    });
+  }, []);
+
   // Placeholder for submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,10 +42,13 @@ const KycPage = () => {
       alert("Please upload both ID document and selfie.");
       return;
     }
+    if (!userId) {
+      alert("User not authenticated.");
+      return;
+    }
     setStatus("pending_review");
     const formData = new FormData();
-    // TODO: Replace with actual user ID from auth context/session
-    formData.append("userId", "test-user-id");
+    formData.append("userId", userId);
     formData.append("documentType", form.documentType);
     formData.append("documentValue", form.documentValue);
     formData.append("documentFile", form.documentFile);
