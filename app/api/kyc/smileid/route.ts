@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 
 // TODO: Import Smile Identity SDK or use fetch for REST API
 // This route handles KYC submission: uploads files to Supabase Storage, and (eventually) calls Smile Identity for liveness check.
@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
     const selfieFile = formData.get("selfieFile") as File;
 
     // --- Upload files to Supabase Storage ---
-    const supabase = createClient();
+
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
     // Upload ID document
     let documentUrl = "";
     if (documentFile) {
