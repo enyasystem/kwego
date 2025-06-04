@@ -74,8 +74,13 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
         {showNotif && (
           <div
             ref={notifRef}
-            className="fixed md:absolute left-0 md:left-auto top-20 md:top-16 w-full md:w-80 max-w-xs md:max-w-none bg-white text-black rounded-lg shadow-xl z-50 border border-belfx_gold-DEFAULT animate-fade-in md:right-0"
-          >            <div className="p-4 border-b font-semibold text-belfx_navy-DEFAULT">Notifications</div>
+            className={
+              // On desktop, use portal and fixed right-8 top-20 to guarantee visibility
+              `${isMobile ? 'fixed left-0 right-0 top-16 mx-auto w-full max-w-xs' : 'fixed right-8 top-20 w-80'} z-[9999] bg-white text-black rounded-lg shadow-xl border border-belfx_gold-DEFAULT animate-fade-in`
+            }
+            style={isMobile ? { left: 0, right: 0, margin: '0 auto', maxWidth: '95vw', width: '100%' } : { right: '2rem', top: '5rem', width: '20rem', maxWidth: '95vw' }}
+          >
+            <div className="p-4 border-b font-semibold text-belfx_navy-DEFAULT">Notifications</div>
             <ul className="max-h-64 overflow-y-auto divide-y">
               {notifications.length === 0 && (
                 <li className="p-4 text-center text-gray-400">No notifications</li>
@@ -111,7 +116,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
           <button
             key={item.key}
             className={`flex items-center gap-3 px-6 py-3 text-base font-medium transition rounded-l-full ${tab === item.key ? "bg-belfx_gold-DEFAULT/20 text-belfx_gold-DEFAULT" : "hover:bg-belfx_gold-DEFAULT/10"}`}
-            onClick={() => { setTab(item.key); setMobileOpen(false); }}
+            onClick={() => { setTab(item.key); if (isMobile && closeSidebar) closeSidebar(); }}
           >
             {item.icon}
             {item.label}
@@ -141,4 +146,4 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
 
 export default AdminSidebar;
 
-// Commit message: fix(notifications): ensure notification dropdown opens and closes correctly on icon click and outside click 🛎️
+// Commit message: fix(notifications): keep notification dropdown always within viewport on all devices 🖥️📱
