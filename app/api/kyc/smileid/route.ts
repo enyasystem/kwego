@@ -18,8 +18,11 @@ export async function POST(req: NextRequest) {
     const selfieFile = formData.get("selfieFile") as File;
 
     // --- Upload files to Supabase Storage ---
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+    // Use service role key to bypass RLS for trusted server-side operations
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY as string
+    );
     // Upload ID document
     let documentUrl = "";
     if (documentFile) {
