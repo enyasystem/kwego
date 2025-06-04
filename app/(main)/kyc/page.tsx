@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,8 +27,34 @@ const KycPage = () => {
   // Placeholder for submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Call API route to submit KYC
+    if (!form.documentFile || !form.selfieFile) {
+      alert("Please upload both ID document and selfie.");
+      return;
+    }
     setStatus("pending_review");
+    const formData = new FormData();
+    // TODO: Replace with actual user ID from auth context/session
+    formData.append("userId", "test-user-id");
+    formData.append("documentType", form.documentType);
+    formData.append("documentValue", form.documentValue);
+    formData.append("documentFile", form.documentFile);
+    formData.append("selfieFile", form.selfieFile);
+    try {
+      const res = await fetch("/api/kyc/smileid", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatus("pending_review");
+      } else {
+        setStatus("rejected");
+        alert(data.error || "KYC submission failed");
+      }
+    } catch (err: any) {
+      setStatus("rejected");
+      alert(err.message || "KYC submission failed");
+    }
   };
 
   return (

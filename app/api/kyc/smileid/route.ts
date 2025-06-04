@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-// import Smile Identity SDK or use fetch for REST API
 
-// TODO: Securely load Smile Identity credentials from env
+// TODO: Import Smile Identity SDK or use fetch for REST API
+// This route handles KYC submission: uploads files to Supabase Storage, and (eventually) calls Smile Identity for liveness check.
+
 const SMILE_ID_PARTNER_ID = process.env.SMILE_ID_PARTNER_ID;
 const SMILE_ID_API_KEY = process.env.SMILE_ID_API_KEY;
 const SMILE_ID_BASE_URL = process.env.SMILE_ID_BASE_URL || "https://api.smileidentity.com/v1";
@@ -16,19 +17,40 @@ export async function POST(req: NextRequest) {
     const documentFile = formData.get("documentFile") as File;
     const selfieFile = formData.get("selfieFile") as File;
 
-    // TODO: Upload files to Supabase Storage and get URLs
-    // For now, just placeholders
-    const documentUrl = "";
-    const selfieUrl = "";
+    // --- Upload files to Supabase Storage ---
+    const supabase = createClient();
+    // Upload ID document
+    let documentUrl = "";
+    if (documentFile) {
+      const { data, error } = await supabase.storage
+        .from("kyc-documents")
+        .upload(`${userId}/id-${Date.now()}-${documentFile.name}`, documentFile, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+      if (error) throw new Error("Failed to upload ID document: " + error.message);
+      documentUrl = data?.path ? supabase.storage.from("kyc-documents").getPublicUrl(data.path).data.publicUrl : "";
+    }
+    // Upload selfie
+    let selfieUrl = "";
+    if (selfieFile) {
+      const { data, error } = await supabase.storage
+        .from("kyc-documents")
+        .upload(`${userId}/selfie-${Date.now()}-${selfieFile.name}`, selfieFile, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+      if (error) throw new Error("Failed to upload selfie: " + error.message);
+      selfieUrl = data?.path ? supabase.storage.from("kyc-documents").getPublicUrl(data.path).data.publicUrl : "";
+    }
 
-    // TODO: Call Smile Identity API to initiate KYC job
-    // See: https://docs.usesmileid.com/reference/submit-job
-    // Example: fetch(`${SMILE_ID_BASE_URL}/job`, { ... })
+    // --- Smile Identity API call for liveness check (to be implemented) ---
+    // You will provide Smile Identity API credentials and integration details here.
+    // For now, we use placeholders for job ID and result.
     const smileIdJobId = "smile-job-id-placeholder";
     const smileIdResult = null;
 
-    // Save KYC request to Supabase
-    const supabase = createClient();
+    // --- Save KYC request to Supabase ---
     const { error } = await supabase.from("kyc_requests").insert({
       user_id: userId,
       status: "pending_review",
@@ -46,3 +68,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: err.message || "Unknown error" }, { status: 500 });
   }
 }
+// ---
+// This route uploads KYC files to Supabase Storage and prepares for Smile Identity liveness check.
+// Replace placeholders with actual Smile Identity API integration when credentials are available.
