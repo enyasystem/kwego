@@ -31,10 +31,13 @@ const AdminKycPanel = () => {
         router.replace("/login?message=Admin access required");
         return;
       }
-      // Example: check if user email is in allowed list or has admin role
-      // Replace this logic with your real admin check
-      const adminEmails = ["admin@belfx.com"]; // TODO: Replace with real admin logic
-      if (data.user.email && adminEmails.includes(data.user.email)) {
+      // Check is_admin flag in profiles table
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", data.user.id)
+        .single();
+      if (profile?.is_admin) {
         setIsAdmin(true);
       } else {
         router.replace("/dashboard?message=Unauthorized");
