@@ -9,6 +9,8 @@ interface AdminSidebarProps {
   setTab: (tab: string) => void;
   adminProfile: any;
   onLogout: () => void;
+  isMobile?: boolean;
+  closeSidebar?: () => void;
 }
 
 const navItems = [
@@ -19,7 +21,7 @@ const navItems = [
   { key: "more", label: "More", icon: <MoreHorizontal className="w-5 h-5" /> },
 ];
 
-const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, onLogout }) => {
+const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, onLogout, isMobile, closeSidebar }) => {
   // Notification state (simulate real-time for now)
   const [notifications, setNotifications] = useState([
     { id: 1, message: "New KYC request submitted", time: "2m ago", read: false },
@@ -27,6 +29,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
   ]);
   const unreadCount = notifications.filter(n => !n.read).length;
   const [showNotif, setShowNotif] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   // Simulate real-time notification (for demo)
   useEffect(() => {
@@ -40,7 +43,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
   }, []);
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-belfx_navy-DEFAULT text-white min-h-screen shadow-xl sticky top-0 z-30">
+    <aside className={`flex flex-col w-64 bg-belfx_navy-DEFAULT text-white min-h-screen shadow-xl sticky top-0 z-30 ${isMobile ? "fixed left-0 top-0 h-full z-[101]" : "hidden md:flex"}`}>
       <div className="flex items-center gap-3 px-6 py-6 border-b border-belfx_gold-DEFAULT relative">
         <img src="/images/belfx-logo-dark.png" alt="BELFX Logo" className="h-8" />
         <span className="font-bold text-belfx_gold-DEFAULT text-lg">BELFX Admin</span>
@@ -55,28 +58,15 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
             <UIBadge className="absolute -top-1 -right-1 bg-red-500 text-xs px-1.5 py-0.5">{unreadCount}</UIBadge>
           )}
         </button>
-        {/* Notification Dropdown */}
-        {showNotif && (
-          <div className="absolute right-0 top-16 w-80 bg-white text-black rounded-lg shadow-xl z-50 border border-belfx_gold-DEFAULT animate-fade-in">
-            <div className="p-4 border-b font-semibold text-belfx_navy-DEFAULT">Notifications</div>
-            <ul className="max-h-64 overflow-y-auto divide-y">
-              {notifications.length === 0 && (
-                <li className="p-4 text-center text-gray-400">No notifications</li>
-              )}
-              {notifications.map((n) => (
-                <li key={n.id} className={`p-4 ${n.read ? "bg-gray-50" : "bg-belfx_gold-DEFAULT/10"}`}>
-                  <div className="font-medium">{n.message}</div>
-                  <div className="text-xs text-gray-500 mt-1">{n.time}</div>
-                </li>
-              ))}
-            </ul>
-            <button
-              className="w-full py-2 text-sm text-belfx_gold-DEFAULT hover:underline border-t"
-              onClick={() => setNotifications((prev) => prev.map(n => ({ ...n, read: true })))}
-            >
-              Mark all as read
-            </button>
-          </div>
+        {/* Close button for mobile */}
+        {isMobile && closeSidebar && (
+          <button
+            className="ml-2 p-2 rounded-full bg-belfx_gold-DEFAULT/10 text-belfx_gold-DEFAULT hover:bg-belfx_gold-DEFAULT/20"
+            onClick={closeSidebar}
+            aria-label="Close sidebar"
+          >
+            <span className="text-lg">×</span>
+          </button>
         )}
       </div>
       <nav className="flex-1 flex flex-col gap-1 mt-6">
@@ -84,7 +74,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
           <button
             key={item.key}
             className={`flex items-center gap-3 px-6 py-3 text-base font-medium transition rounded-l-full ${tab === item.key ? "bg-belfx_gold-DEFAULT/20 text-belfx_gold-DEFAULT" : "hover:bg-belfx_gold-DEFAULT/10"}`}
-            onClick={() => setTab(item.key)}
+            onClick={() => { setTab(item.key); setMobileOpen(false); }}
           >
             {item.icon}
             {item.label}
@@ -114,4 +104,4 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
 
 export default AdminSidebar;
 
-// Commit message: feat(admin): add notification bell and real-time alerts to sidebar/header 🔔
+// Commit message: fix(responsive): update AdminSidebar for mobile/desktop support and close button on mobile 📱
