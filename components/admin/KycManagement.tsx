@@ -51,7 +51,7 @@ const KycManagement: React.FC<KycManagementProps> = ({
               </TableCell>
               <TableCell>{req.created_at ? new Date(req.created_at).toLocaleString() : "-"}</TableCell>
               <TableCell>
-                <Button size="sm" variant="outline" onClick={() => setKycModal(req)} disabled={req.status !== "pending"}>Review</Button>
+                <Button size="sm" variant="outline" onClick={() => setKycModal(req)} disabled={!(req.status === "pending" || req.status === "pending_submission" || req.status === "pending_review")}>Review</Button>
               </TableCell>
             </TableRow>
           ))}

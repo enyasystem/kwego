@@ -134,7 +134,13 @@ const AdminDashboard = () => {
   const handleKycAction = async (id: string, status: "approved" | "rejected") => {
     setLoading(true);
     const supabase = createClient();
+    // Find the KYC request to get the user_id
+    const kycReq = kycRequests.find((k) => k.id === id);
     await supabase.from("kyc_requests").update({ status }).eq("id", id);
+    // If approved, also update the user's profile status
+    if (status === "approved" && kycReq?.user_id) {
+      await supabase.from("profiles").update({ status: "kyc_approved" }).eq("id", kycReq.user_id);
+    }
     setKycRequests((prev) =>
       prev.map((k) => (k.id === id ? { ...k, status } : k))
     );
