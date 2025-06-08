@@ -61,7 +61,7 @@ const KycManagement: React.FC<KycManagementProps> = ({
     {/* KYC Modal */}
     {kycModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md text-gray-900">
           <h3 className="text-lg font-bold mb-2">KYC Review</h3>
           <div className="mb-2"><span className="font-semibold">User:</span> {kycModal.profiles?.full_name || kycModal.user_id}</div>
           <div className="mb-2"><span className="font-semibold">Type:</span> {kycModal.document_type}</div>
