@@ -64,24 +64,6 @@ const AdminDashboard = () => {
     checkSession();
   }, []);
 
-  // Fetch all users and KYC requests after login
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    const supabase = createClient();
-    setLoading(true);
-    supabase
-      .from("profiles")
-      .select("id, full_name, email, avatar_url, created_at, is_admin, status")
-      .order("created_at", { ascending: false })
-      .then(({ data }) => setUsers(data || []));
-    supabase
-      .from("kyc_requests")
-      .select("*, profiles(full_name, email)")
-      .order("created_at", { ascending: false })
-      .then(({ data }) => setKycRequests(data || []));
-    setLoading(false);
-  }, [isAuthenticated]);
-
   // Fetch admin profile after login
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -91,7 +73,7 @@ const AdminDashboard = () => {
       if (user) {
         const { data } = await supabase
           .from("profiles")
-          .select("id, full_name, email, avatar_url")
+          .select("id, full_name, email, avatar_url, is_admin")
           .eq("id", user.id)
           .single();
         setAdminProfile(data);
@@ -99,6 +81,27 @@ const AdminDashboard = () => {
     };
     fetchAdmin();
   }, [isAuthenticated]);
+
+  // Fetch all users and KYC requests only after confirming admin status
+  useEffect(() => {
+    if (!isAuthenticated || !adminProfile || !adminProfile.is_admin) return;
+    const supabase = createClient();
+    setLoading(true);
+    Promise.all([
+      supabase
+        .from("profiles")
+        .select("id, full_name, email, avatar_url, created_at, is_admin, status")
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("kyc_requests")
+        .select("*, profiles(full_name, email)")
+        .order("created_at", { ascending: false })
+    ]).then(([usersRes, kycRes]) => {
+      setUsers(usersRes.data || []);
+      setKycRequests(kycRes.data || []);
+      setLoading(false);
+    });
+  }, [isAuthenticated, adminProfile]);
 
   // Fetch transactions for selected user
   const fetchTransactions = async (userId: string) => {
@@ -164,8 +167,17 @@ const AdminDashboard = () => {
   }
 
   // Show nothing until session is checked
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || (isAuthenticated && !adminProfile)) {
     return null;
+  }
+
+  // Show unauthorized message to non-admins
+  if (isAuthenticated && adminProfile && !adminProfile.is_admin) {
+    return (
+      <div className="p-8 text-center text-red-600 font-bold text-xl">
+        🚫 Unauthorized: You do not have admin access.
+      </div>
+    );
   }
 
   return (
