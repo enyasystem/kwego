@@ -5,15 +5,16 @@ import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Chart } from "@/components/ui/chart";
 import { Loader2, Users, IdCard, Settings, BarChart2, MoreHorizontal } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import AdminSidebar from "@/components/layout/admin-sidebar";
+import AdminLoginForm from "@/components/admin/AdminLoginForm";
+import UserManagement from "@/components/admin/UserManagement";
+import KycManagement from "@/components/admin/KycManagement";
+import SettingsPanel from "@/components/admin/SettingsPanel";
+import ReportsPanel from "@/components/admin/ReportsPanel";
+import MorePanel from "@/components/admin/MorePanel";
 
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -150,35 +151,15 @@ const AdminDashboard = () => {
   // Only show login form if isAuthenticated === false
   if (isAuthenticated === false) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-belfx_navy-DEFAULT">
-        <Card className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle className="text-center text-belfx_gold-DEFAULT">Admin Login</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="flex flex-col gap-4">
-              <Input
-                type="email"
-                placeholder="Admin Email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-              />
-              {loginError && <div className="text-red-500 text-sm">{loginError}</div>}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Logging in..." : "Login"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+      <AdminLoginForm
+        email={email}
+        password={password}
+        loading={loading}
+        loginError={loginError}
+        setEmail={setEmail}
+        setPassword={setPassword}
+        handleLogin={handleLogin}
+      />
     );
   }
 
@@ -247,216 +228,40 @@ const AdminDashboard = () => {
                 </TabsList>
                 {/* Users Tab */}
                 <TabsContent value="users">
-                  <h2 className="text-xl font-semibold mb-4 text-belfx_gold-DEFAULT">User Management</h2>
-                  <div className="mb-4 flex flex-col md:flex-row md:items-center gap-2">
-                    <Input
-                      placeholder="Search users by name or email..."
-                      value={userSearch}
-                      onChange={e => setUserSearch(e.target.value)}
-                      className="max-w-xs"
-                    />
-                  </div>
-                  <div className="overflow-x-auto border rounded-lg bg-belfx_navy-light shadow-sm">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>User</TableHead>
-                          <TableHead>Email</TableHead>
-                          <TableHead>Registered</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>Role</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredUsers.map((user) => (
-                          <TableRow key={user.id} className="cursor-pointer hover:bg-belfx_gold-DEFAULT/10 transition" onClick={() => fetchTransactions(user.id)}>
-                            <TableCell className="flex items-center gap-2">
-                              <img src={user.avatar_url || "/placeholder-user.jpg"} alt="avatar" className="w-8 h-8 rounded-full border border-belfx_gold-DEFAULT" />
-                              <span className="font-medium">{user.full_name || user.email}</span>
-                            </TableCell>
-                            <TableCell>{user.email}</TableCell>
-                            <TableCell>{user.created_at ? new Date(user.created_at).toLocaleDateString() : "-"}</TableCell>
-                            <TableCell>
-                              <Badge variant={user.status === "active" ? "default" : "outline"}>{user.status || "active"}</Badge>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant={user.is_admin ? "default" : "outline"}>{user.is_admin ? "Admin" : "User"}</Badge>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                  {/* User Profile Drawer/Modal */}
-                  {profileDrawer && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-end bg-black/40">
-                      <div className="bg-white w-full max-w-md h-full shadow-2xl p-6 flex flex-col">
-                        <div className="flex items-center gap-4 mb-4">
-                          <img src={profileDrawer.avatar_url || "/placeholder-user.jpg"} alt="avatar" className="w-16 h-16 rounded-full border-2 border-belfx_gold-DEFAULT" />
-                          <div>
-                            <div className="text-xl font-bold">{profileDrawer.full_name || profileDrawer.email}</div>
-                            <div className="text-sm text-gray-500">{profileDrawer.email}</div>
-                            <div className="mt-1"><Badge variant={profileDrawer.is_admin ? "default" : "outline"}>{profileDrawer.is_admin ? "Admin" : "User"}</Badge></div>
-                          </div>
-                        </div>
-                        <div className="mb-2 text-xs text-gray-400">Registered: {profileDrawer.created_at ? new Date(profileDrawer.created_at).toLocaleString() : "-"}</div>
-                        <div className="mb-4">
-                          <Badge variant={profileDrawer.status === "active" ? "default" : "outline"}>{profileDrawer.status || "active"}</Badge>
-                        </div>
-                        <h3 className="font-semibold mb-2">Transaction History</h3>
-                        <div className="flex-1 overflow-y-auto border rounded-lg bg-belfx_navy-light">
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>Type</TableHead>
-                                <TableHead>Amount</TableHead>
-                                <TableHead>Currency</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Date</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {transactions.length === 0 && (
-                                <TableRow><TableCell colSpan={5} className="text-center text-gray-400">No transactions</TableCell></TableRow>
-                              )}
-                              {transactions.map((tx) => (
-                                <TableRow key={tx.id}>
-                                  <TableCell>{tx.type}</TableCell>
-                                  <TableCell>{tx.amount}</TableCell>
-                                  <TableCell>{tx.currency_code}</TableCell>
-                                  <TableCell>
-                                    <Badge variant={tx.status === "completed" ? "default" : tx.status === "failed" ? "destructive" : "outline"}>{tx.status}</Badge>
-                                  </TableCell>
-                                  <TableCell>{tx.created_at ? new Date(tx.created_at).toLocaleString() : "-"}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </div>
-                        <Button className="mt-6" variant="outline" onClick={() => setProfileDrawer(null)}>Close</Button>
-                      </div>
-                    </div>
-                  )}
+                  <UserManagement
+                    users={users}
+                    userSearch={userSearch}
+                    setUserSearch={setUserSearch}
+                    filteredUsers={filteredUsers}
+                    fetchTransactions={fetchTransactions}
+                    profileDrawer={profileDrawer}
+                    setProfileDrawer={setProfileDrawer}
+                    transactions={transactions}
+                  />
                 </TabsContent>
                 {/* KYC Tab */}
                 <TabsContent value="kyc">
-                  <div className="mb-4 flex flex-wrap gap-2 items-center">
-                    <span className="font-semibold">Filter:</span>
-                    <Button size="sm" variant={kycFilter === "pending" ? "default" : "outline"} onClick={() => setKycFilter("pending")}>Pending</Button>
-                    <Button size="sm" variant={kycFilter === "approved" ? "default" : "outline"} onClick={() => setKycFilter("approved")}>Approved</Button>
-                    <Button size="sm" variant={kycFilter === "rejected" ? "default" : "outline"} onClick={() => setKycFilter("rejected")}>Rejected</Button>
-                    <Button size="sm" variant={kycFilter === "all" ? "default" : "outline"} onClick={() => setKycFilter("all")}>All</Button>
-                  </div>
-                  <div className="overflow-x-auto border rounded-lg bg-belfx_navy-light">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>User</TableHead>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>Submitted</TableHead>
-                          <TableHead>Action</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredKyc.map((req) => (
-                          <TableRow key={req.id}>
-                            <TableCell>{req.profiles?.full_name || req.user_id}</TableCell>
-                            <TableCell>{req.document_type}</TableCell>
-                            <TableCell>
-                              <Badge variant={req.status === "approved" ? "default" : req.status === "rejected" ? "destructive" : "outline"}>{req.status}</Badge>
-                            </TableCell>
-                            <TableCell>{req.created_at ? new Date(req.created_at).toLocaleString() : "-"}</TableCell>
-                            <TableCell>
-                              <Button size="sm" variant="outline" onClick={() => setKycModal(req)} disabled={req.status !== "pending"}>Review</Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                  {/* KYC Modal */}
-                  {kycModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-                        <h3 className="text-lg font-bold mb-2">KYC Review</h3>
-                        <div className="mb-2"><span className="font-semibold">User:</span> {kycModal.profiles?.full_name || kycModal.user_id}</div>
-                        <div className="mb-2"><span className="font-semibold">Type:</span> {kycModal.document_type}</div>
-                        <div className="mb-2"><span className="font-semibold">Status:</span> <Badge variant={kycModal.status === "approved" ? "default" : kycModal.status === "rejected" ? "destructive" : "outline"}>{kycModal.status}</Badge></div>
-                        <div className="mb-2"><span className="font-semibold">Submitted:</span> {kycModal.created_at ? new Date(kycModal.created_at).toLocaleString() : "-"}</div>
-                        {/* TODO: Show uploaded document links/images here */}
-                        <div className="flex gap-2 mt-4">
-                          <Button size="sm" variant="default" onClick={() => handleKycAction(kycModal.id, "approved")} disabled={loading}>Approve</Button>
-                          <Button size="sm" variant="destructive" onClick={() => handleKycAction(kycModal.id, "rejected")} disabled={loading}>Reject</Button>
-                          <Button size="sm" variant="outline" onClick={() => setKycModal(null)}>Close</Button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  <KycManagement
+                    kycFilter={kycFilter}
+                    setKycFilter={setKycFilter}
+                    filteredKyc={filteredKyc}
+                    setKycModal={setKycModal}
+                    kycModal={kycModal}
+                    handleKycAction={handleKycAction}
+                    loading={loading}
+                  />
                 </TabsContent>
                 {/* Settings Tab */}
                 <TabsContent value="settings">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Roles & Permissions */}
-                    <div>
-                      <h3 className="font-bold mb-2">Roles & Permissions</h3>
-                      <div className="bg-belfx_navy-light rounded-lg p-4">
-                        <div className="mb-2">Assign admin rights to users:</div>
-                        {users.map((user) => (
-                          <div key={user.id} className="flex items-center gap-2 mb-2">
-                            <span>{user.full_name || user.email}</span>
-                            <Button size="sm" variant={user.is_admin ? "default" : "outline"} disabled>{user.is_admin ? "Admin" : "User"}</Button>
-                            {/* TODO: Add toggle for admin rights */}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Branding & Notifications */}
-                    <div>
-                      <h3 className="font-bold mb-2">Branding & Notifications</h3>
-                      <div className="bg-belfx_navy-light rounded-lg p-4">
-                        <div className="mb-2">Platform branding and notification settings coming soon.</div>
-                        {/* TODO: Add branding/logo upload and notification config */}
-                      </div>
-                    </div>
-                  </div>
+                  <SettingsPanel users={users} />
                 </TabsContent>
                 {/* Reports Tab */}
                 <TabsContent value="reports">
-                  <div className="mb-4 flex flex-wrap gap-2 items-center">
-                    <span className="font-semibold">Filter:</span>
-                    <Button size="sm" variant="outline">Last 7 days</Button>
-                    <Button size="sm" variant="outline">Last 30 days</Button>
-                    <Button size="sm" variant="outline">All time</Button>
-                    <Button size="sm" variant="outline">Export</Button>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="bg-belfx_navy-light rounded-lg p-4">
-                      <h4 className="font-semibold mb-2">User Growth</h4>
-                      <Chart type="line" data={{ labels: ["Jan", "Feb", "Mar", "Apr"], datasets: [{ label: "Users", data: [10, 30, 50, 80] }] }} />
-                    </div>
-                    <div className="bg-belfx_navy-light rounded-lg p-4">
-                      <h4 className="font-semibold mb-2">Transaction Volume</h4>
-                      <Chart type="bar" data={{ labels: ["Jan", "Feb", "Mar", "Apr"], datasets: [{ label: "Volume", data: [1000, 3000, 5000, 8000] }] }} />
-                    </div>
-                  </div>
+                  <ReportsPanel />
                 </TabsContent>
                 {/* More Tab */}
                 <TabsContent value="more">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="bg-belfx_navy-light rounded-lg p-4">
-                      <h4 className="font-semibold mb-2">Transactions</h4>
-                      <div className="text-sm text-gray-400">Full transaction management coming soon.</div>
-                    </div>
-                    <div className="bg-belfx_navy-light rounded-lg p-4">
-                      <h4 className="font-semibold mb-2">Support Tickets</h4>
-                      <div className="text-sm text-gray-400">Support ticket handling coming soon.</div>
-                    </div>
-                    <div className="bg-belfx_navy-light rounded-lg p-4">
-                      <h4 className="font-semibold mb-2">System Logs</h4>
-                      <div className="text-sm text-gray-400">System log monitoring coming soon.</div>
-                    </div>
-                  </div>
+                  <MorePanel />
                 </TabsContent>
               </Tabs>
             </CardContent>
@@ -469,4 +274,4 @@ const AdminDashboard = () => {
 
 export default AdminDashboard;
 
-// Commit message: fix(responsive): make admin dashboard and sidebar fully responsive for all devices 📱
+// Commit message: refactor: use new components for each dashboard section, move UI logic into those components, and keep only state/handlers in the main page. Import and use AdminLoginForm, UserManagement, KycManagement, SettingsPanel, ReportsPanel, MorePanel.
