@@ -1,4 +1,4 @@
--- BELFX: KYC Requests Table for Smile Identity Integration
+-- kwegofx: KYC Requests Table for Smile Identity Integration
 CREATE TABLE IF NOT EXISTS public.kyc_requests (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,

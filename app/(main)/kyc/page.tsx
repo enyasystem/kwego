@@ -77,7 +77,7 @@ const KycPage = () => {
         <CardHeader>
           <CardTitle>KYC Verification</CardTitle>
           <CardDescription>
-            Complete your KYC to unlock all BELFX features. We require your BVN/ID, a valid ID document, and a selfie for verification.
+            Complete your KYC to unlock all kwegofx features. We require your BVN/ID, a valid ID document, and a selfie for verification.
           </CardDescription>
         </CardHeader>
         <CardContent>

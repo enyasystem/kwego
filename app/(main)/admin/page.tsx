@@ -231,7 +231,7 @@ const AdminDashboard = () => {
           <Card className="shadow-xl border-0">
             <CardHeader className="bg-belfx_navy-DEFAULT rounded-t-lg shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
               <CardTitle className="flex items-center gap-2 text-xl md:text-2xl font-bold text-belfx_gold-DEFAULT">
-                <img src="/images/belfx-logo-dark.png" alt="BELFX Logo" className="h-8" />
+                <img src="/images/belfx-logo-dark.png" alt="kwegofx Logo" className="h-8" />
                 Admin Dashboard
               </CardTitle>
             </CardHeader>

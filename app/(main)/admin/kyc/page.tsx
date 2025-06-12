@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
 /**
- * Admin KYC Review Panel for BELFX
+ * Admin KYC Review Panel for kwegofx
  * - Lists all KYC requests with filters for status
  * - Shows user info, document, selfie, and Smile Identity result (if any)
  * - Allows admin to approve or reject with reason
@@ -89,7 +89,7 @@ const AdminKycPanel = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl font-bold text-belfx_gold-DEFAULT">
-            <img src="/images/belfx-logo-dark.png" alt="BELFX Logo" className="h-8" />
+            <img src="/images/belfx-logo-dark.png" alt="kwegofx Logo" className="h-8" />
             Admin KYC Dashboard
           </CardTitle>
           <div className="flex gap-4 mt-4">
@@ -97,7 +97,7 @@ const AdminKycPanel = () => {
             <Button variant={filter === "approved" ? "default" : "outline"} onClick={() => setFilter("approved")}>Approved</Button>
             <Button variant={filter === "rejected" ? "default" : "outline"} onClick={() => setFilter("rejected")}>Rejected</Button>
           </div>
-          <div className="mt-2 text-sm text-belfx_green-DEFAULT font-medium">KYC requests are reviewed within 24 hours of submission.</div>
+          <div className="mt-2 text-sm text-belfx_green-DEFAULT font-medium">KYC requests are reviewed within 24 hours of submission on kwegofx.</div>
         </CardHeader>
         <CardContent>
           {loading ? (

@@ -57,8 +57,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ tab, setTab, adminProfile, 
   return (
     <aside className={`flex flex-col w-64 bg-belfx_navy-DEFAULT text-white min-h-screen shadow-xl sticky top-0 z-30 ${isMobile ? "fixed left-0 top-0 h-full z-[101]" : "hidden md:flex"}`}>
       <div className="flex items-center gap-3 px-6 py-6 border-b border-belfx_gold-DEFAULT relative">
-        <img src="/images/belfx-logo-dark.png" alt="BELFX Logo" className="h-8" />
-        <span className="font-bold text-belfx_gold-DEFAULT text-lg">BELFX Admin</span>
+        <img src="/images/belfx-logo-dark.png" alt="kwegofx Logo" className="h-8" />
+        <span className="font-bold text-belfx_gold-DEFAULT text-lg">kwegofx Admin</span>
         {/* Notification Bell */}
         <button
           className="ml-auto relative p-2 hover:bg-belfx_gold-DEFAULT/10 rounded-full"
