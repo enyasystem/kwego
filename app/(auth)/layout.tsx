@@ -81,7 +81,7 @@ export default async function AuthLayout({
       </header>
       <main className="flex flex-1 items-center justify-center p-4">{children}</main>
       <footer className="py-8 text-center text-sm text-gray-400 border-t border-belfx_navy-light">
-        © {new Date().getFullYear()} BELFX. All rights reserved.
+        © {new Date().getFullYear()} Kwegofx. All rights reserved.
       </footer>
     </div>
   )
