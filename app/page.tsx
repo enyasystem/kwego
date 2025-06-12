@@ -148,32 +148,32 @@ export default function HomePage() {
   const faqItems = [
     {
       id: "faq-1",
-      question: "What is BELFX?",
+      question: "What is kwegofx?",
       answer:
-        "BELFX is a peer-to-peer (P2P) Forex platform that allows users to directly exchange currencies like NGN, USD, CAD, GBP, and EUR with each other securely and efficiently.",
+        "kwegofx is a peer-to-peer (P2P) Forex platform that allows users to directly exchange currencies like NGN, USD, CAD, GBP, and EUR with each other securely and efficiently.",
     },
     {
       id: "faq-2",
-      question: "How do I start trading on BELFX?",
+      question: "How do I start trading on kwegofx?",
       answer:
         "To start trading, you need to register for an account, complete the KYC (Know Your Customer) verification process, fund your wallet, and then you can browse existing offers or create your own in the marketplace.",
     },
     {
       id: "faq-3",
-      question: "Is BELFX secure?",
+      question: "Is kwegofx secure?",
       answer:
         "Yes, security is our top priority. We use state-of-the-art encryption, offer Two-Factor Authentication (2FA), and have robust KYC/AML protocols to protect your assets and personal information.",
     },
     {
       id: "faq-4",
       question: "What currencies can I trade?",
-      answer: "Currently, BELFX supports NGN, USD, CAD, GBP, and EUR. We plan to add more currencies in the future.",
+      answer: "Currently, kwegofx supports NGN, USD, CAD, GBP, and EUR. We plan to add more currencies in the future.",
     },
     {
       id: "faq-5",
       question: "Are there any fees for trading?",
       answer:
-        "BELFX aims to offer competitive and transparent fees. Please refer to our 'Fees & Limits' page for detailed information on transaction fees.",
+        "kwegofx aims to offer competitive and transparent fees. Please refer to our 'Fees & Limits' page for detailed information on transaction fees.",
     },
   ]
 
@@ -185,8 +185,8 @@ export default function HomePage() {
                   ${isScrolled ? "bg-belfx_navy-DEFAULT/95 border-b-belfx_navy-light/50 shadow-lg backdrop-blur-md" : "bg-transparent border-transparent"}`}
       >
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <Link href="/" className="flex items-center gap-2" aria-label="BELFX Homepage">
-            <img src="/images/belfx-logo-dark.png" alt="BELFX Logo" className="h-9 md:h-10" />
+          <Link href="/" className="flex items-center gap-2" aria-label="kwegofx Homepage">
+            <img src="/images/belfx-logo-dark.png" alt="kwegofx Logo" className="h-9 md:h-10" />
           </Link>
           <nav className="hidden items-center gap-x-5 lg:gap-x-7 text-sm font-medium md:flex">
             {[
@@ -343,7 +343,7 @@ export default function HomePage() {
         <section id="features" className="py-16 md:py-24 bg-belfx_navy-light">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-4">
-              Why <span className="text-belfx_gold-DEFAULT">BELFX</span> Stands Out
+              Why <span className="text-belfx_gold-DEFAULT">kwegofx</span> Stands Out
             </h2>
             <p className="text-center text-gray-400 mb-12 md:mb-16 max-w-2xl mx-auto text-lg leading-relaxed">
               Experience the future of currency exchange with our user-centric platform, designed for security, speed,
@@ -386,10 +386,10 @@ export default function HomePage() {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="order-2 md:order-1">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                  The <span className="text-belfx_gold-DEFAULT">BELFX</span> Vision ✨
+                  The <span className="text-belfx_gold-DEFAULT">kwegofx</span> Vision ✨
                 </h2>
                 <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-                  BELFX is pioneering a new era of financial freedom by providing a secure, transparent, and
+                  kwegofx is pioneering a new era of financial freedom by providing a secure, transparent, and
                   user-friendly P2P Forex platform.
                 </p>
                 <div className="space-y-8">
@@ -422,7 +422,7 @@ export default function HomePage() {
               <div className="order-1 md:order-2 flex justify-center items-center">
                 <img
                   src="/images/about-us-unsplash.png"
-                  alt="Diverse professional team collaborating in a bright, modern office, symbolizing BELFX's global vision and teamwork"
+                  alt="Diverse professional team collaborating in a bright, modern office, symbolizing kwegofx's global vision and teamwork"
                   className="rounded-xl shadow-2xl max-w-md w-full object-cover aspect-[4/3] transform transition-transform duration-500 hover:scale-105"
                 />
               </div>
@@ -540,7 +540,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
-              <img src="/images/belfx-logo-dark.png" alt="BELFX Logo" className="h-8 mb-4" />
+              <img src="/images/belfx-logo-dark.png" alt="kwegofx Logo" className="h-8 mb-4" />
               <p className="text-gray-400 text-sm leading-relaxed">
                 The future of P2P Forex. Securely exchange currencies with ease and confidence.
               </p>
@@ -593,7 +593,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="text-center text-sm text-gray-500 pt-8 border-t border-belfx_navy-light/30">
-            © {new Date().getFullYear()} BELFX Technologies Ltd. All rights reserved. BELFX is a financial technology
+            © {new Date().getFullYear()} kwegofx Technologies Ltd. All rights reserved. kwegofx is a financial technology
             company, not a bank. Currency exchange services are provided on a peer-to-peer basis.
           </div>
         </div>

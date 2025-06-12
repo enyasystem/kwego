@@ -13,7 +13,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "BELFX - P2P Forex Platform",
+  title: "Kwegofx - P2P Forex Platform",
   description: "Securely exchange NGN, USD, CAD, GBP, and EUR.",
     generator: 'v0.dev'
 }

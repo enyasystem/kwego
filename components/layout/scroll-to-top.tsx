@@ -35,7 +35,7 @@ export function ScrollToTop() {
         <Button
           onClick={scrollToTop}
           size="icon"
-          className="fixed bottom-6 right-6 bg-kwegofx_gold-DEFAULT text-kwegofx_navy-DEFAULT hover:bg-kwegofx_gold-dark rounded-full shadow-lg z-50 transition-opacity duration-300"
+          className="fixed bottom-6 right-6 bg-belfx_gold-DEFAULT text-belfx_navy-DEFAULT hover:bg-belfx_gold-dark rounded-full shadow-lg z-50 transition-opacity duration-300"
           aria-label="Scroll to top"
         >
           <ArrowUp className="h-6 w-6" />

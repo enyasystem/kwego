@@ -1,6 +1,6 @@
-# BELFX - P2P Forex Platform
+# Kwegofx - P2P Forex Platform
 
-BELFX is a modern, secure, and scalable Peer-to-Peer (P2P) Forex trading platform. It allows users to exchange NGN (Nigerian Naira) with other major currencies like USD, CAD, GBP, and EUR.
+Kwegofx is a modern, secure, and scalable Peer-to-Peer (P2P) Forex trading platform. It allows users to exchange NGN (Nigerian Naira) with other major currencies like USD, CAD, GBP, and EUR.
 
 ## ✨ Features
 
