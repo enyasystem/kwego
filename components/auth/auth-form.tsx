@@ -211,7 +211,14 @@ export default function AuthForm({ mode }: AuthFormProps) {
               className="mt-1 bg-belfx_navy-DEFAULT border-belfx_gold-dark/50 text-white focus:border-belfx_gold-DEFAULT focus:ring-belfx_gold-DEFAULT"
               placeholder="John Doe"
             />
-            {errors.fullName && <p className="mt-1 text-xs text-red-400">{errors.fullName.message as string}</p>}
+            {/* Use type assertion to safely access error fields for each mode */}
+            {mode === "register" && (
+              <>
+                {"fullName" in errors && errors.fullName && (
+                  <p className="mt-1 text-xs text-red-400">{errors.fullName.message as string}</p>
+                )}
+              </>
+            )}
           </div>
         )}
         <div>
@@ -227,7 +234,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
           />
           {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email.message as string}</p>}
         </div>
-        {mode !== "forgot-password" && (
+        {(mode === "login" || mode === "register") && (
           <div>
             <Label htmlFor="password_auth_form" className="text-gray-300">
               Password
@@ -249,7 +256,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password.message as string}</p>}
+            {"password" in errors && errors.password && (
+              <p className="mt-1 text-xs text-red-400">{errors.password.message as string}</p>
+            )}
           </div>
         )}
         {mode === "register" && (
@@ -274,8 +283,13 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            {errors.confirmPassword && (
-              <p className="mt-1 text-xs text-red-400">{errors.confirmPassword.message as string}</p>
+            {/* Use type assertion to safely access error fields for each mode */}
+            {mode === "register" && (
+              <>
+                {"confirmPassword" in errors && errors.confirmPassword && (
+                  <p className="mt-1 text-xs text-red-400">{errors.confirmPassword.message as string}</p>
+                )}
+              </>
             )}
           </div>
         )}

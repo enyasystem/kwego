@@ -108,9 +108,9 @@ export default function HomePage() {
 
     return () => {
       isMounted = false
-      if (authListener?.unsubscribe) {
+      if (authListener?.subscription?.unsubscribe) {
         console.log("HomePage Auth: Unsubscribing auth listener.")
-        authListener.unsubscribe()
+        authListener.subscription.unsubscribe()
       }
     }
   }, [fetchAndSetUser, router, supabase.auth]) // Add supabase.auth to ensure listener re-subscribes if client changes (though unlikely)
