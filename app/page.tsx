@@ -587,7 +587,7 @@ export default function HomePage() {
             <div>
               <h5 className="font-semibold text-white mb-4">Contact Us</h5>
               <ul className="space-y-2 text-sm">
-                <li className="text-gray-400">📧 support@belfx.com</li>
+                <li className="text-gray-400">📧 support@kwegofx.com</li>
                 <li className="text-gray-400">📍 105 Kwegofx Avenue, Lagos, Nigeria</li>
               </ul>
             </div>
