@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-// TODO: Import Smile Identity SDK or use fetch for REST API
-// This route handles KYC submission: uploads files to Supabase Storage, and (eventually) calls Smile Identity for liveness check.
-
-const SMILE_ID_PARTNER_ID = process.env.SMILE_ID_PARTNER_ID;
-const SMILE_ID_API_KEY = process.env.SMILE_ID_API_KEY;
-const SMILE_ID_BASE_URL = process.env.SMILE_ID_BASE_URL || "https://api.smileidentity.com/v1";
+// TODO: Import new KYC provider SDK or use fetch for REST API
+// This route handles KYC submission: uploads files to Supabase Storage, and (eventually) calls the KYC provider for liveness check.
 
 export async function POST(req: NextRequest) {
   try {
@@ -48,11 +44,11 @@ export async function POST(req: NextRequest) {
       selfieUrl = data?.path ? supabase.storage.from("kyc-documents").getPublicUrl(data.path).data.publicUrl : "";
     }
 
-    // --- Smile Identity API call for liveness check (to be implemented) ---
-    // You will provide Smile Identity API credentials and integration details here.
+    // --- KYC Provider API call for liveness check (to be implemented) ---
+    // You will provide the new KYC API credentials and integration details here.
     // For now, we use placeholders for job ID and result.
-    const smileIdJobId = "smile-job-id-placeholder";
-    const smileIdResult = null;
+    const kycJobId = "kyc-job-id-placeholder";
+    const kycResult = null;
 
     // --- Save KYC request to Supabase ---
     const { error } = await supabase.from("kyc_requests").insert({
@@ -61,8 +57,8 @@ export async function POST(req: NextRequest) {
       document_type: documentType,
       document_url: documentUrl,
       selfie_url: selfieUrl,
-      smile_id_job_id: smileIdJobId,
-      result: smileIdResult,
+      kyc_job_id: kycJobId,
+      result: kycResult,
     });
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -73,5 +69,5 @@ export async function POST(req: NextRequest) {
   }
 }
 // ---
-// This route uploads KYC files to Supabase Storage and prepares for Smile Identity liveness check.
-// Replace placeholders with actual Smile Identity API integration when credentials are available.
+// This route uploads KYC files to Supabase Storage and prepares for the new KYC provider liveness check.
+// Replace placeholders with actual KYC provider API integration when credentials are available.

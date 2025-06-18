@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "zip-out": "powershell Compress-Archive -Path out/* -DestinationPath out.zip -Force",
+    "build-and-zip": "npm run build && npm run zip-out",
+    "export": "next export",
+    "build-and-export": "npm run build && npm run export",
     "start": "next start",
     "lint": "next lint"
   },

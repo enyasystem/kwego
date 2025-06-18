@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-// TODO: Connect to Supabase and Smile Identity API
+// TODO: Connect to Supabase and new KYC Provider API
 // TODO: Add stepper logic and form validation
 
 const KycPage = () => {
@@ -54,10 +54,13 @@ const KycPage = () => {
     formData.append("documentFile", form.documentFile);
     formData.append("selfieFile", form.selfieFile);
     try {
-      const res = await fetch("/api/kyc/smileid", {
-        method: "POST",
-        body: formData,
-      });
+      // Smile Identity KYC API call removed. Replace with your new API integration here.
+      // Example:
+      // const res = await fetch("/api/kyc/new-provider", {
+      //   method: "POST",
+      //   body: formData,
+      // });
+      const res = { ok: true }; // Placeholder response
       const data = await res.json();
       if (res.ok) {
         setStatus("pending_review");
