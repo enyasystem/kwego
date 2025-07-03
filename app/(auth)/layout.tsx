@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type React from "react"
 import Link from "next/link"
 import { cookies } from "next/headers" // Add this import
